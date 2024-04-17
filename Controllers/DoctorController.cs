@@ -1,4 +1,5 @@
 ﻿using Clinic.Data;
+using Clinic.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
@@ -16,6 +17,11 @@ namespace Clinic.Controllers
         {
             var doctors = _context.Doctors.ToList();
             return View(doctors);
+        }
+        public IActionResult Detail(int id)
+        {
+            Doctor doctor = _context.Doctors.FirstOrDefault(d => d.Id == id);
+            return View(doctor);
         }
     }
 }
