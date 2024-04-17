@@ -1,0 +1,28 @@
+﻿@model Patient
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+    <div class="col-auto d-none d-lg-block">
+        <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXwVMBH75TaekX3rtcgkfKaoMOUHvTc2C17g&usqp=CAU"
+             alt="Card image cap">
+    </div>
+    <div class="col p-4 d-flex flex-column position-static">
+        <h2 class="mb-0">@Model.Name @Model.Surname</h3>
+        <h5 class="mb-1 text-body-secondary">@Model.BirthDate</h5>
+        <p class="card-text mb-auto">@Model.Gender</p>
+        @if (Model.Address != null)
+        {
+            <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-geo-alt"></i> @($"{Model.Address.Street}, {Model.Address.City}, {Model.Address.State}")</strong>
+        }
+        @if (Model.PhoneNumber != null)
+        {
+            <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong>
+        }
+    </div>
+</div>
