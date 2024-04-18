@@ -3,6 +3,7 @@ using Clinic.Interfaces;
 using Clinic.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Clinic.Controllers
 {
@@ -23,6 +24,21 @@ namespace Clinic.Controllers
         {
             Patient patient = await _patientRepository.GetByIdAsync(id); 
             return View(patient);
+        }
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Patient patient)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(patient);
+            }
+            _patientRepository.Add(patient);
+            return RedirectToAction("Index");
         }
     }
 }
