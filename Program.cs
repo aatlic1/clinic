@@ -1,4 +1,6 @@
 using Clinic.Data;
+using Clinic.Interfaces;
+using Clinic.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic
@@ -11,6 +13,7 @@ namespace Clinic
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
