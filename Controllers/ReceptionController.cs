@@ -1,4 +1,5 @@
 ﻿using Clinic.Data;
+using Clinic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,15 +7,15 @@ namespace Clinic.Controllers
 {
     public class ReceptionController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IReceptionRepository _receptionRepository;
 
-        public ReceptionController(ApplicationDbContext context)
+        public ReceptionController(IReceptionRepository receptionRepository)
         {
-            _context = context;
+            _receptionRepository = receptionRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var receptions = _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor).ToList();
+            var receptions = await _receptionRepository.GetAll();
             return View(receptions);
         }
     }
