@@ -1,4 +1,5 @@
 ﻿using Clinic.Data;
+using Clinic.Interfaces;
 using Clinic.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,21 +7,21 @@ namespace Clinic.Controllers
 {
     public class DoctorController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public DoctorController(ApplicationDbContext context)
+        public DoctorController(IDoctorRepository doctorRepository)
         {
-            _context = context;
+            _doctorRepository = doctorRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var doctors = _context.Doctors.ToList();
+            var doctors = await _doctorRepository.GetAll();
             return View(doctors);
         }
-        public IActionResult Detail(int id)
+        public async Task<IActionResult> Detail(int id)
         {
-            Doctor doctor = _context.Doctors.FirstOrDefault(d => d.Id == id);
+            Doctor doctor = await _doctorRepository.GetByIdAsync(id);
             return View(doctor);
         }
     }
