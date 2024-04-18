@@ -1,6 +1,7 @@
 ﻿using Clinic.Data;
 using Clinic.Interfaces;
 using Clinic.Models;
+using Clinic.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
@@ -23,6 +24,21 @@ namespace Clinic.Controllers
         {
             Doctor doctor = await _doctorRepository.GetByIdAsync(id);
             return View(doctor);
+        }
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Doctor doctor)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(doctor);
+            }
+            _doctorRepository.Add(doctor);
+            return RedirectToAction("Index");
         }
     }
 }
