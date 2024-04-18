@@ -1,4 +1,5 @@
 ﻿using Clinic.Data;
+using Clinic.Data.Enum;
 using Clinic.Interfaces;
 using Clinic.Models;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,11 @@ namespace Clinic.Repository
         public async Task<IEnumerable<Doctor>> GetDoctorByNameOrCode(string name)
         {
             return await _context.Doctors.Where(d => d.Name.Contains(name) || d.Surname.Contains(name) || d.Code.Contains(name)).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Doctor>> GetSpecialistAndResident()
+        {
+            return await _context.Doctors.Where(d => d.Title == Title.Specialist || d.Title == Title.Resident).ToListAsync();
         }
 
         public bool Save()
