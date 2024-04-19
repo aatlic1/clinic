@@ -2,6 +2,7 @@
 using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
+using Clinic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
@@ -31,12 +32,22 @@ namespace Clinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Doctor doctor)
+        public async Task<IActionResult> Create(CreateDoctorViewModel doctorVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(doctor);
+                return View(doctorVM);
             }
+
+            var doctor = new Doctor
+            {
+                Id = doctorVM.Id,
+                Name = doctorVM.Name,
+                Surname = doctorVM.Surname,
+                Title = doctorVM.Title,
+                Code = doctorVM.Code,
+            };
+
             _doctorRepository.Add(doctor);
             return RedirectToAction("Index");
         }

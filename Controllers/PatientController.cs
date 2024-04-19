@@ -1,6 +1,7 @@
 ﻿using Clinic.Data;
 using Clinic.Interfaces;
 using Clinic.Models;
+using Clinic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -31,12 +32,30 @@ namespace Clinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Patient patient)
+        public async Task<IActionResult> Create(CreatePatientViewModel patientVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(patient);
+                return View(patientVM);
             }
+
+            var patient = new Patient
+            {
+                Id = patientVM.Id,
+                Name = patientVM.Name,
+                Surname = patientVM.Surname,
+                BirthDate = patientVM.BirthDate,
+                Gender = patientVM.Gender,
+                AddressId = patientVM.AddressId,
+                Address = new Address
+                {
+                    Street = patientVM.Address.Street,
+                    City = patientVM.Address.City,
+                    State = patientVM.Address.State,
+                },
+                PhoneNumber = patientVM.PhoneNumber
+            };
+
             _patientRepository.Add(patient);
             return RedirectToAction("Index");
         }

@@ -2,6 +2,7 @@
 using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
+using Clinic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,12 +45,24 @@ namespace Clinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Reception reception)
+        public async Task<IActionResult> Create(CreateReceptionViewModel receptionVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(reception);
+                return View(receptionVM);
             }
+
+            var reception = new Reception 
+            { 
+                Id = receptionVM.Id,
+                PatientId = receptionVM.PatientId,
+                Patient = receptionVM.Patient,
+                DoctorId = receptionVM.DoctorId,
+                Doctor = receptionVM.Doctor,
+                DateTime = receptionVM.DateTime,
+                Emergency = receptionVM.Emergency
+            };
+
             _receptionRepository.Add(reception);
             return RedirectToAction("Index");
         }
