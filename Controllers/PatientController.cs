@@ -87,9 +87,9 @@ namespace Clinic.Controllers
                 return View(patientVM);
             }
 
-            var userRace = await _patientRepository.GetByIdAsyncNoTracking(id);
+            var detail = await _patientRepository.GetByIdAsyncNoTracking(id);
 
-            if (userRace == null)
+            if (detail == null)
             {
                 return View("Error");
             }
