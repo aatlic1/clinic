@@ -59,5 +59,56 @@ namespace Clinic.Controllers
             _patientRepository.Add(patient);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var patient = await _patientRepository.GetByIdAsync(id);
+            if (patient == null) return View("Error");
+            var patientVM = new EditPatientViewModel
+            {
+                Id = patient.Id,
+                Name = patient.Name,
+                Surname = patient.Surname,
+                BirthDate = patient.BirthDate,
+                Gender = patient.Gender,
+                AddressId = patient.AddressId,
+                Address = patient.Address,
+                PhoneNumber = patient.PhoneNumber
+            };
+            return View(patientVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditPatientViewModel patientVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit patient");
+                return View(patientVM);
+            }
+
+            var userRace = await _patientRepository.GetByIdAsyncNoTracking(id);
+
+            if (userRace == null)
+            {
+                return View("Error");
+            }
+
+            var patient = new Patient
+            {
+                Id = patientVM.Id,
+                Name = patientVM.Name,
+                Surname = patientVM.Surname,
+                BirthDate = patientVM.BirthDate,
+                Gender = patientVM.Gender,
+                AddressId = patientVM.AddressId,
+                Address = patientVM.Address,
+                PhoneNumber = patientVM.PhoneNumber
+            };
+
+            _patientRepository.Update(patient);
+
+            return RedirectToAction("Index");
+        }
     }
 }

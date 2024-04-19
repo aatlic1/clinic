@@ -6,6 +6,7 @@ namespace Clinic.Interfaces
     {
         Task<IEnumerable<Patient>> GetAll();
         Task<Patient> GetByIdAsync(int id);
+        Task<Patient> GetByIdAsyncNoTracking(int id);
         Task<IEnumerable<Patient>> GetPatientByName(string name);
         bool Add(Patient patient);
         bool Update(Patient patient);

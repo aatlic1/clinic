@@ -34,6 +34,10 @@ namespace Clinic.Repository
         {
             return await _context.Patients.Include(a => a.Address).FirstOrDefaultAsync(i => i.Id == id);
         }
+        public async Task<Patient> GetByIdAsyncNoTracking(int id)
+        {
+            return await _context.Patients.Include(a => a.Address).AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        }
 
         public async Task<IEnumerable<Patient>> GetPatientByName(string name)
         {
