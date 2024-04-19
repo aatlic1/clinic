@@ -1,4 +1,5 @@
 ﻿using Clinic.Data.Enum;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace Clinic.Models
