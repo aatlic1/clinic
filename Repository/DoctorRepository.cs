@@ -31,6 +31,11 @@ namespace Clinic.Repository
             return await _context.Doctors.ToListAsync();
         }
 
+        public async Task<Doctor> GetByCode(string code)
+        {
+            return await _context.Doctors.FirstOrDefaultAsync(d => d.Code == code);
+        }
+
         public async Task<Doctor> GetByIdAsync(int id)
         {
             return await _context.Doctors.FirstOrDefaultAsync(i => i.Id == id);

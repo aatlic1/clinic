@@ -6,6 +6,12 @@
 *@
 @{
 }
+@if (TempData["Error"] != null)
+{
+    <div class="col-md-12 alert alert-danger">
+        <span><b>Sorry!</b> - @TempData["Error"]</span>
+    </div>
+}
 
 <form method="post" asp-action="Edit">
     <div class="form-row form-group">
