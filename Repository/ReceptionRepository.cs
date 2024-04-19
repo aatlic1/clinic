@@ -35,6 +35,11 @@ namespace Clinic.Repository
         {
             return await _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor).FirstOrDefaultAsync(i => i.Id == id);
         }
+        public async Task<Reception> GetByIdAsyncNoTracking(int id)
+        {
+            return await _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor)
+                                            .AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
+        }
 
         public async Task<IEnumerable<Reception>> GetReceptionsByDates(DateTime startDate, DateTime endDate)
         {

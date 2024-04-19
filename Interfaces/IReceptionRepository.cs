@@ -6,6 +6,7 @@ namespace Clinic.Interfaces
     {
         Task<IEnumerable<Reception>> GetAll();
         Task<Reception> GetByIdAsync(int id);
+        Task<Reception> GetByIdAsyncNoTracking(int id);
         Task<IEnumerable<Reception>> GetReceptionsByDates(DateTime startDate, DateTime endDate);
         bool Add(Reception reception);
         bool Update(Reception reception);

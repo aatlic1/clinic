@@ -2,6 +2,7 @@
 using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
+using Clinic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -44,13 +45,88 @@ namespace Clinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Reception reception)
+        public async Task<IActionResult> Create(CreateReceptionViewModel receptionVM)
         {
             if (!ModelState.IsValid)
             {
-                return View(reception);
+                return View(receptionVM);
             }
+
+            var reception = new Reception 
+            { 
+                Id = receptionVM.Id,
+                PatientId = receptionVM.PatientId,
+                Patient = receptionVM.Patient,
+                DoctorId = receptionVM.DoctorId,
+                Doctor = receptionVM.Doctor,
+                DateTime = receptionVM.DateTime,
+                Emergency = receptionVM.Emergency
+            };
+
             _receptionRepository.Add(reception);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var patients = await _patientRepository.GetAll();
+            ViewBag.PatientList = new SelectList(patients.Select(p => new SelectListItem
+            {
+                Value = p.Id.ToString(),
+                Text = $"{p.Name} {p.Surname}"
+            }), "Value", "Text");
+
+            var doctors = await _doctorRepository.GetSpecialistAndResident();
+            ViewBag.DoctorList = new SelectList(doctors.Select(d => new SelectListItem
+            {
+                Value = d.Id.ToString(),
+                Text = $"{d.Name} {d.Surname} - {d.Code}"
+            }), "Value", "Text");
+
+            var reception = await _receptionRepository.GetByIdAsync(id);
+            if (reception == null) return View("Error");
+            var receptionVM = new EditReceptionViewModel
+            {
+                Id = reception.Id,
+                PatientId = reception.PatientId,
+                Patient = reception.Patient,
+                DoctorId = reception.DoctorId,
+                Doctor = reception.Doctor,
+                DateTime = reception.DateTime,
+                Emergency = reception.Emergency
+            };
+            return View(receptionVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditReceptionViewModel receptionVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit reception");
+                return View(receptionVM);
+            }
+
+            var detail = await _receptionRepository.GetByIdAsyncNoTracking(id);
+
+            if (detail == null)
+            {
+                return View("Error");
+            }
+
+            var reception = new Reception
+            {
+                Id = receptionVM.Id,
+                PatientId = receptionVM.PatientId,
+                Patient = receptionVM.Patient,
+                DoctorId = receptionVM.DoctorId,
+                Doctor = receptionVM.Doctor,
+                DateTime = receptionVM.DateTime,
+                Emergency = receptionVM.Emergency
+            };
+
+            _receptionRepository.Update(reception);
+
             return RedirectToAction("Index");
         }
     }
