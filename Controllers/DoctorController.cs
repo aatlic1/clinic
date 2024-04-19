@@ -34,22 +34,28 @@ namespace Clinic.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateDoctorViewModel doctorVM)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(doctorVM);
+                var existing = await _doctorRepository.GetByCode(doctorVM.Code);
+
+                if (existing == null)
+                {
+                    var doctor = new Doctor
+                    {
+                        Id = doctorVM.Id,
+                        Name = doctorVM.Name,
+                        Surname = doctorVM.Surname,
+                        Title = doctorVM.Title,
+                        Code = doctorVM.Code,
+                    };
+                    _doctorRepository.Add(doctor);
+                    return RedirectToAction("Index");
+                }
+                TempData["Error"] = "Code is already existing. Please try again.";
             }
 
-            var doctor = new Doctor
-            {
-                Id = doctorVM.Id,
-                Name = doctorVM.Name,
-                Surname = doctorVM.Surname,
-                Title = doctorVM.Title,
-                Code = doctorVM.Code,
-            };
+            return View(doctorVM);
 
-            _doctorRepository.Add(doctor);
-            return RedirectToAction("Index");
         }
         public async Task<IActionResult> Edit(int id)
         {
@@ -69,31 +75,37 @@ namespace Clinic.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditDoctorViewModel doctorVM)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Failed to edit doctor");
-                return View(doctorVM);
+                var detail = await _doctorRepository.GetByIdAsyncNoTracking(id);
+
+                if (detail == null)
+                {
+                    return View("Error");
+                }
+
+                var existing = await _doctorRepository.GetByCode(doctorVM.Code);
+
+                if (existing == null)
+                {
+
+                    var doctor = new Doctor
+                    {
+                        Id = doctorVM.Id,
+                        Name = doctorVM.Name,
+                        Surname = doctorVM.Surname,
+                        Title = doctorVM.Title,
+                        Code = doctorVM.Code,
+                    };
+
+                    _doctorRepository.Update(doctor);
+
+                    return RedirectToAction("Index");
+                }
+                TempData["Error"] = "Code is already existing. Please try again.";
+
             }
-
-            var detail = await _doctorRepository.GetByIdAsyncNoTracking(id);
-
-            if (detail == null)
-            {
-                return View("Error");
-            }
-
-            var doctor = new Doctor
-            {
-                Id = doctorVM.Id,
-                Name = doctorVM.Name,
-                Surname = doctorVM.Surname,
-                Title = doctorVM.Title,
-                Code = doctorVM.Code,
-            };
-
-            _doctorRepository.Update(doctor);
-
-            return RedirectToAction("Index");
+            return View(doctorVM);
         }
     }
 }
