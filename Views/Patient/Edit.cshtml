@@ -1,0 +1,67 @@
+﻿@using Clinic.Data.Enum
+@using Clinic.ViewModels
+@model EditPatientViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form method="post" asp-action="Edit">
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Name" class="form-control form-control-lg" placeholder="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Surname" class="form-control form-control-lg" placeholder="Surname" />
+            <span asp-validation-for="Surname" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="BirthDate" class="form-control form-control-lg" type="date" placeholder="Birth Date" />
+            <span asp-validation-for="BirthDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row form-group">
+        <div class="col">
+            <select asp-for="Gender" asp-items="@Html.GetEnumSelectList<Gender>()" class="form-control">
+                <option>--Select--</option>
+            </select>
+            <span asp-validation-for="Gender" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Address.Street" class="form-control form-control-lg" placeholder="Street" />
+            <span asp-validation-for="Address.Street" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="Address.City" class="form-control form-control-lg" placeholder="City" />
+            <span asp-validation-for="Address.City" class="text-danger"></span>
+        </div>
+        <div class="col">
+            <input asp-for="Address.State" class="form-control form-control-lg" placeholder="State" />
+            <span asp-validation-for="Address.State" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Phone" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <button class="btn btn-block btn-success btn-lg" type="submit">Create Account</button>
+        </div>
+    </div>
+</form>
