@@ -1,14 +1,12 @@
 using Clinic.Data;
 using Clinic.Interfaces;
+using Clinic.Models;
 using Clinic.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clinic
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -21,12 +19,19 @@ namespace Clinic
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.AddIdentity<Doctor, IdentityRole>()
+                            .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSession();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie();
+
             var app = builder.Build();
 
             if (args.Length == 1 && args[0].ToLower() == "seeddata")
             {
-                //await Seed.SeedUsersAndRolesAsync(app);
-                Seed.SeedData(app);
+                await Seed.SeedUsersAndRolesAsync(app);
+                //Seed.SeedData(app);
             }
 
             // Configure the HTTP request pipeline.
@@ -49,6 +54,3 @@ namespace Clinic
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-        }
-    }
-}

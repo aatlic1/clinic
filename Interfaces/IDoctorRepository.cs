@@ -5,8 +5,8 @@ namespace Clinic.Interfaces
     public interface IDoctorRepository
     {
         Task<IEnumerable<Doctor>> GetAll();
-        Task<Doctor> GetByIdAsync(int id);
-        Task<Doctor> GetByIdAsyncNoTracking(int id);
+        Task<Doctor> GetByIdAsync(string id);
+        Task<Doctor> GetByIdAsyncNoTracking(string id);
         Task<IEnumerable<Doctor>> GetDoctorByNameOrCode(string name);
         Task<Doctor> GetByCode(string code);
         Task<IEnumerable<Doctor>> GetSpecialistAndResident();
