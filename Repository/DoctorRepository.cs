@@ -36,11 +36,11 @@ namespace Clinic.Repository
             return await _context.Doctors.FirstOrDefaultAsync(d => d.Code == code);
         }
 
-        public async Task<Doctor> GetByIdAsync(int id)
+        public async Task<Doctor> GetByIdAsync(string id)
         {
             return await _context.Doctors.FirstOrDefaultAsync(i => i.Id == id);
         }
-        public async Task<Doctor> GetByIdAsyncNoTracking(int id)
+        public async Task<Doctor> GetByIdAsyncNoTracking(string id)
         {
             return await _context.Doctors.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         }

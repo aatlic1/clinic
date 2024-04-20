@@ -1,16 +1,15 @@
 ﻿using Clinic.Data.Enum;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
 namespace Clinic.Models
 {
-    public class Doctor
+    public class Doctor : IdentityUser
     {
-        [Key]
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public Title Title { get; set; }
-        public string Code { get; set; }
+        public Title? Title { get; set; }
+        public string? Code { get; set; }
     }
 }

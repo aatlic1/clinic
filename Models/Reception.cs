@@ -11,7 +11,7 @@ namespace Clinic.Models
         public int PatientId { get; set; }
         public Patient? Patient { get; set; }
         [ForeignKey("Doctor")]
-        public int DoctorId { get; set; }
+        public string DoctorId { get; set; }
         public Doctor? Doctor { get; set; }
         public DateTime DateTime { get; set; }
         public bool Emergency { get; set; }
