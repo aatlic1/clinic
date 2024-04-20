@@ -21,7 +21,7 @@ namespace Clinic.Controllers
             var doctors = await _doctorRepository.GetAll();
             return View(doctors);
         }
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(string id)
         {
             Doctor doctor = await _doctorRepository.GetByIdAsync(id);
             return View(doctor);
@@ -57,7 +57,7 @@ namespace Clinic.Controllers
             return View(doctorVM);
 
         }
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             var doctor = await _doctorRepository.GetByIdAsync(id);
             if (doctor == null) return View("Error");
@@ -73,7 +73,7 @@ namespace Clinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, EditDoctorViewModel doctorVM)
+        public async Task<IActionResult> Edit(string id, EditDoctorViewModel doctorVM)
         {
             if (ModelState.IsValid)
             {

@@ -1,5 +1,6 @@
 ﻿using Clinic.Data.Enum;
 using Clinic.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Diagnostics;
 
 namespace Clinic.Data
@@ -74,64 +75,80 @@ namespace Clinic.Data
                     });
                     context.SaveChanges();
                 }
+            }
+        }
 
-                if (!context.Doctors.Any())
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
+            {
+                //Roles
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                if (!await roleManager.RoleExistsAsync(UserRole.Admin))
+                    await roleManager.CreateAsync(new IdentityRole(UserRole.Admin));
+                if (!await roleManager.RoleExistsAsync(UserRole.Doctor))
+                    await roleManager.CreateAsync(new IdentityRole(UserRole.Doctor));
+                if (!await roleManager.RoleExistsAsync(UserRole.Nurse))
+                    await roleManager.CreateAsync(new IdentityRole(UserRole.Nurse));
+
+                //Users
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<Doctor>>();
+                string adminUserEmail = "maxsmith@gmail.com";
+
+                var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
+                if (adminUser == null)
                 {
-                    context.Doctors.AddRange(new List<Doctor>()
+                    var newAdminUser = new Doctor()
                     {
-                        new Doctor()
-                        {
-                            Name = "Davide",
-                            Surname = "Anderson",
-                            Title = Title.Specialist,
-                            Code = "DA74S"
-                        },
-                        new Doctor()
-                        {
-                            Name = "Ann",
-                            Surname = "Brown",
-                            Title = Title.Resident,
-                            Code = "AB69R"
-                        },
-                        new Doctor()
-                        {
-                            Name = "Jully",
-                            Surname = "Harris",
-                            Title = Title.Nurse,
-                            Code = "JH82N"
-                        },
-                    });
-                    context.SaveChanges();
+                        UserName = "maxsmith",
+                        Email = adminUserEmail,
+                        EmailConfirmed = true,
+                        Name = "Max",
+                        Surname = "Smith"
+                    };
+                    await userManager.CreateAsync(newAdminUser, "Coding@1234?");
+                    await userManager.AddToRoleAsync(newAdminUser, UserRole.Admin);
                 }
 
-                if (!context.Receptions.Any())
+                string appDoctorEmail = "annbrown@gmail.com";
+
+                var appUser = await userManager.FindByEmailAsync(appDoctorEmail);
+                if (appUser == null)
                 {
-                    context.Receptions.AddRange(new List<Reception>() 
+                    var newAppUser = new Doctor()
                     {
-                        new Reception()
-                        {
-                            PatientId = 1, 
-                            DoctorId = 1, 
-                            DateTime = DateTime.Now.AddDays(15), 
-                            Emergency = false 
-                        },
-                        new Reception()
-                        {
-                            PatientId = 2, 
-                            DoctorId = 1, 
-                            DateTime = DateTime.Now.AddDays(20),
-                            Emergency = true 
-                        },
-                        new Reception()
-                        {
-                            PatientId = 3,
-                            DoctorId = 1,
-                            DateTime = DateTime.Now.AddDays(10),
-                            Emergency = true
-                        }
-                    });
-                    context.SaveChanges();
+                        UserName = "annbrown",
+                        Email = appDoctorEmail,
+                        EmailConfirmed = true,
+                        Name = "Ann",
+                        Surname = "Brown",
+                        Title = Title.Specialist,
+                        Code = "DA74S"
+                    };
+                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                    await userManager.AddToRoleAsync(newAppUser, UserRole.Doctor);
                 }
+
+                string appNurseEmail = "jullyharris@gmail.com";
+
+                var appUserNurse = await userManager.FindByEmailAsync(appNurseEmail);
+                if (appUserNurse == null)
+                {
+                    var newAppUser = new Doctor()
+                    {
+                        UserName = "jullyharris",
+                        Email = appNurseEmail,
+                        EmailConfirmed = true,
+                        Name = "Jully",
+                        Surname = "Harris",
+                        Title = Title.Nurse,
+                        Code = "kol885M"
+                    };
+                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                    await userManager.AddToRoleAsync(newAppUser, UserRole.Nurse);
+                }
+
             }
         }
     }
