@@ -4,7 +4,7 @@ namespace Clinic.ViewModels
 {
     public class CreateDoctorViewModel
     {
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public Title? Title { get; set; }
