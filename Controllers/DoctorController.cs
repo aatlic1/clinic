@@ -3,6 +3,7 @@ using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
 using Clinic.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
@@ -10,10 +11,15 @@ namespace Clinic.Controllers
     public class DoctorController : Controller
     {
         private readonly IDoctorRepository _doctorRepository;
+        private readonly UserManager<Doctor> _userManager;
+        private readonly SignInManager<Doctor> _signInManager;
 
-        public DoctorController(IDoctorRepository doctorRepository)
+        public DoctorController(IDoctorRepository doctorRepository, UserManager<Doctor> userManager, 
+            SignInManager<Doctor> signInManager)
         {
             _doctorRepository = doctorRepository;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -42,15 +48,29 @@ namespace Clinic.Controllers
                 {
                     var doctor = new Doctor
                     {
-                        Id = doctorVM.Id,
                         Name = doctorVM.Name,
                         Surname = doctorVM.Surname,
                         Title = doctorVM.Title,
                         Code = doctorVM.Code,
+                        Email = "someemail@gmail.com",
+                        UserName = "someemail@gmail.com"
                     };
-                    _doctorRepository.Add(doctor);
+
+                    var newUserResponse = await _userManager.CreateAsync(doctor, "Jabuka12!");
+
+                    if (newUserResponse.Succeeded)
+                        if (doctor.Title == Data.Enum.Title.Nurse)
+                        { 
+                            await _userManager.AddToRoleAsync(doctor, UserRole.Nurse); 
+                        }
+                        else
+                        {
+                            await _userManager.AddToRoleAsync(doctor, UserRole.Doctor);
+                        }
+
                     return RedirectToAction("Index");
                 }
+
                 TempData["Error"] = "Code is already existing. Please try again.";
             }
 
