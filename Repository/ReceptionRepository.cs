@@ -9,10 +9,12 @@ namespace Clinic.Repository
     public class ReceptionRepository : IReceptionRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ReceptionRepository(ApplicationDbContext context)
+        public ReceptionRepository(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
         public bool Add(Reception reception)
         {
@@ -28,7 +30,15 @@ namespace Clinic.Repository
 
         public async Task<IEnumerable<Reception>> GetAll()
         {
-            return await _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor).ToListAsync();
+            var curUser = _httpContextAccessor.HttpContext?.User;
+            var curUserId = curUser.GetUserId();
+            if (curUser.IsInRole("nurse") || curUser.IsInRole("admin"))
+                return await _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor).ToListAsync();
+            else
+            {
+                return await _context.Receptions.Include(p => p.Patient).Include(d => d.Doctor)
+                    .Where(r => r.DoctorId == curUserId).ToListAsync();
+            }       
         }
 
         public async Task<Reception> GetByIdAsync(int id)
