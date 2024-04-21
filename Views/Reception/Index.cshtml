@@ -7,6 +7,8 @@
 
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/badges/">
+    <link href="badges.css" rel="stylesheet">
 </head>
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
@@ -14,6 +16,7 @@
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col">Patient's name</th>
                             <th scope="col">Date</th>
                             <th scope="col">Doctor's name</th>
@@ -23,21 +26,56 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>@item.Patient.Name @item.Patient.Surname</td>
-                                <td>@item.DateTime</td>
-                                <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
+                            @if (@item.Emergency == true)
+                            {
+                                <tr style="border: 2px solid red;">
                                 <td>
-                                    <div class="btn-group">
-                                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
-                                    {
-                                        <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-outline-secondary">Edit</a>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
-                                    }
-                                    </div>
-                                </td>
+                                    <span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Danger</span>
+                                    </td>
+                                    <td>@item.Patient.Name @item.Patient.Surname</td>
+                                    <td>@item.DateTime</td>
+                                    <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
+                                            {
+                                                <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                                class="btn btn-sm btn-outline-secondary">Edit</a>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                                            }
+                                        else if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
+                                        {
+                                            <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-secondary">Write report</a>
+                                        }
+                                        </div>
+                                    </td>
                             </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@item.Patient.Name @item.Patient.Surname</td>
+                                    <td>@item.DateTime</td>
+                                    <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
+                                            {
+                                                <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                                   class="btn btn-sm btn-outline-secondary">Edit</a>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                                        }
+                                        else if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
+                                        {
+                                            <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-outline-secondary">Write report</a>
+                                        }
+                                    </div>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
