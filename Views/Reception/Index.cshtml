@@ -29,9 +29,12 @@
                                 <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
                                 <td>
                                     <div class="btn-group">
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
+                                    {
                                         <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
                                            class="btn btn-sm btn-outline-secondary">Edit</a>
                                         <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                                    }
                                     </div>
                                 </td>
                             </tr>
@@ -41,8 +44,11 @@
 
             </div>
         <div class="position-fixed bottom-0 end-0 mb-3 me-3">
-            <a type="btn btn-success" asp-controller="Reception" asp-action="Create"
-               class="btn btn-primary rounded-circle"><i class="bi bi-plus-circle"></i></a>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
+            {
+                <a type="btn btn-success" asp-controller="Reception" asp-action="Create"
+                class="btn btn-primary rounded-circle"><i class="bi bi-plus-circle"></i></a>
+            }
         </div>
     </div>
 
