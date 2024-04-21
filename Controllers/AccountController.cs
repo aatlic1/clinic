@@ -72,61 +72,73 @@ namespace Clinic.Controllers
                 TempData["Error"] = "Wrong credentials. Please try again";
                 return View(codeVM);
             }
+            else if (existing.Email != "someemail@gmail.com")
+            {
+                TempData["Error"] = "You already have account!";
+                return View(codeVM);
+            }
 
-            return RedirectToAction("Register", "Account", new { existingDoctorId = existing.Id });
+            TempData["ExistingDoctorId"] = existing.Id;
+
+            return RedirectToAction("Register", "Account");
         }
 
         public IActionResult Register()
         {
             var response = new RegisterViewModel();
+            TempData["DoctorId"] = TempData["ExistingDoctorId"];
+
             return View(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerVM, string doctorId)
+        public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
             if (!ModelState.IsValid) return View(registerVM);
 
-            var doctor = await _doctorRepository.GetByIdAsync(doctorId);
 
-            var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
-            if (user != null)
+            var doctorId = TempData["DoctorId"].ToString();
+            if (!string.IsNullOrEmpty(doctorId))
             {
-                TempData["Error"] = "This email address is already in use";
-                return View(registerVM);
-            }
-
-            await _userManager.SetEmailAsync(doctor, registerVM.EmailAddress);
-
-            // Generisanje tokena za potvrdu novog emaila (opciono)
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(doctor);
-
-            // Potvrda novog emaila (opciono)
-            await _userManager.ConfirmEmailAsync(doctor, token);
-
-            // Promena lozinke korisnika
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(doctor);
-            var resetResult = await _userManager.ResetPasswordAsync(doctor, resetToken, registerVM.Password);
-
-            if (!resetResult.Succeeded)
-            {
-                // Ako promena lozinke nije uspela, prikaži odgovarajuću poruku o grešci
-                foreach (var error in resetResult.Errors)
+                var doctor = await _doctorRepository.GetByIdAsync(doctorId);
+                if (doctor != null)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    _doctorRepository.Delete(doctor);
+                    var user = await _userManager.FindByEmailAsync(registerVM.EmailAddress);
+                    if (user != null)
+                    {
+                        TempData["Error"] = "This email address is already in use";
+                        return View(registerVM);
+                    }
+
+                    var newUser = new Doctor()
+                    {
+                        Name = doctor.Name,
+                        Surname = doctor.Surname,
+                        Title = doctor.Title,
+                        Code = doctor.Code,
+                        Email = registerVM.EmailAddress,
+                        UserName = registerVM.EmailAddress
+                    };
+                    var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
+
+                    if (newUserResponse.Succeeded)
+                        if (newUser.Title == Data.Enum.Title.Nurse)
+                            await _userManager.AddToRoleAsync(newUser, UserRole.Nurse);
+                        else await _userManager.AddToRoleAsync(newUser, UserRole.Nurse);
+
+                    return RedirectToAction("Index", "Patient");
+                    
                 }
-                return View(registerVM);
             }
-
-
-            return RedirectToAction("Index", "Home");
+            return View(registerVM);
         }
 
 
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Reception");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
