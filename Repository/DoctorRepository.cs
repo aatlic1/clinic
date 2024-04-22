@@ -2,6 +2,7 @@
 using Clinic.Data.Enum;
 using Clinic.Interfaces;
 using Clinic.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic.Repository
@@ -28,7 +29,7 @@ namespace Clinic.Repository
 
         public async Task<IEnumerable<Doctor>> GetAll()
         {
-            return await _context.Doctors.ToListAsync();
+            return await _context.Doctors.Where(d => d.Code != null && d.Title != null).ToListAsync();
         }
 
         public async Task<Doctor> GetByCode(string code)
