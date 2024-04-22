@@ -139,5 +139,19 @@ namespace Clinic.Controllers
             _receptionRepository.Delete(reception);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Filter(DateTime? startDate, DateTime? endDate)
+        {
+            if (!startDate.HasValue || !endDate.HasValue)
+            {
+                var receptions = await _receptionRepository.GetAll();
+                return PartialView("_ReceptionsTable", receptions);
+            }
+            else
+            {
+                var receptions = await _receptionRepository.GetReceptionsByDates(startDate.Value, endDate.Value);
+                return PartialView("_ReceptionsTable", receptions);
+            }
+        }
     }
 }

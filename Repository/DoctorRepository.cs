@@ -48,7 +48,10 @@ namespace Clinic.Repository
 
         public async Task<IEnumerable<Doctor>> GetDoctorByNameOrCode(string name)
         {
-            return await _context.Doctors.Where(d => d.Name.Contains(name) || d.Surname.Contains(name) || d.Code.Contains(name)).ToListAsync();
+            return await _context.Doctors
+                .Where(d => (d.Name.Contains(name) || d.Surname.Contains(name) || d.Code.Contains(name)) && 
+                   d.Code != null && d.Title != null)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Doctor>> GetSpecialistAndResident()
