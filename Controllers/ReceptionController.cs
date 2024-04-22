@@ -15,7 +15,8 @@ namespace Clinic.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IPatientRepository _patientRepository;
 
-        public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, IDoctorRepository doctorRepository)
+        public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, 
+            IDoctorRepository doctorRepository)
         {
             _receptionRepository = receptionRepository;
             _doctorRepository = doctorRepository;
