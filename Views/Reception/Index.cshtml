@@ -10,6 +10,23 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/badges/">
     <link href="badges.css" rel="stylesheet">
 </head>
+
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteConfirmationModalLabel">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel this reception?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
             <div class="table-responsive small">
@@ -41,7 +58,8 @@
                                             {
                                                 <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
                                                 class="btn btn-sm btn-outline-secondary">Edit</a>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-reception-id="@item.Id">Cancel</button>
+
                                             }
                                         @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                                         {
@@ -65,7 +83,7 @@
                                             {
                                                 <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
                                                    class="btn btn-sm btn-outline-secondary">Edit</a>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-reception-id="@item.Id">Cancel</button>
                                         }
                                         @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                                         {
@@ -91,3 +109,29 @@
     </div>
 
 </div>
+
+
+
+@section Scripts {
+    <script>
+        var deleteReceptionId;
+
+        $(document).ready(function () {
+            $('.btn-delete').click(function () {
+                deleteReceptionId = $(this).data('reception-id'); 
+                $('#deleteConfirmationModal').modal('show');
+            });
+
+            $('#confirmDeleteButton').click(function () {
+                $.ajax({
+                    url: '/Reception/Delete',
+                    type: 'POST',
+                    data: { id: deleteReceptionId },
+                    success: function (data) {
+                        location.reload();
+                    },
+                });
+            });
+        });
+    </script>
+}
