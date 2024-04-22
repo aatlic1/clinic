@@ -83,7 +83,7 @@ namespace Clinic.Controllers
                 Text = $"{d.Name} {d.Surname} - {d.Code}"
             }), "Value", "Text");
 
-            var reception = await _receptionRepository.GetByIdAsync(id);
+            var reception = await _receptionRepository.GetByIdAsyncNoTracking(id);
             if (reception == null) return View("Error");
             var receptionVM = new EditReceptionViewModel
             {

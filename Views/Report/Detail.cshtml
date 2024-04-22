@@ -1,0 +1,46 @@
+﻿@model Report
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h2 class="mb-0">@Model.Caption</h2>
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <h2 class="mb-0">@Model.Patient.Name @Model.Patient.Surname</h2>
+            <input type="hidden" asp-for="Patient.Name" />
+            <input type="hidden" asp-for="Patient.Surname" />
+            <h5 class="mb-1 text-body-secondary">@Model.Patient.BirthDate</h5>
+            <input type="hidden" asp-for="Patient.BirthDate" />
+            <p class="card-text mb-auto">@Model.Patient.Gender</p>
+            <input type="hidden" asp-for="Patient.Gender" />
+            @if (Model.Patient.Address != null)
+            {
+                <strong class="d-inline-block mb-2 text-primary-emphasis">
+                    @($"{Model.Patient.Address.Street}, {Model.Patient.Address.City}, {Model.Patient.Address.State}")
+                    <input type="hidden" asp-for="Patient.Address.City" />
+                    <input type="hidden" asp-for="Patient.Address.City" />
+                    <input type="hidden" asp-for="Patient.Address.State" />
+                </strong>
+            }
+        </div>
+        <div class="col p-4 d-flex flex-column position-static">
+            <h2 class="mb-0">
+                @Model.Doctor.Name @Model.Doctor.Surname
+                <input type="hidden" asp-for="Doctor.Surname" />
+                <input type="hidden" asp-for="Doctor.Name" />
+
+            </h2>
+            <input type="hidden" asp-for="DateTime" />
+            <h5 class="mb-1 text-body-secondary">@Model.DateTime</h5>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col">
+            <p>@Model.Description</p>
+        </div>
+    </div>
+    <div class="form-row form-group">
+        <div class="col"><a class="btn btn-outline-secondary" asp-controller="Patient" asp-action="Detail">Cancel</a>
+        </div>
+    </div>

@@ -1,4 +1,5 @@
-﻿@model Patient
+﻿@using Clinic.ViewModels
+@model PatientViewModel
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -25,4 +26,15 @@
             <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong>
         }
     </div>
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+    @foreach (var report in Model.Reports) 
+    {
+        <div class="col p-4 d-flex flex-column position-static">
+                <a asp-controller="Report" asp-action="Detail" asp-route-id="@report.Id" class="col p-4 d-flex flex-column position-static text-decoration-none text-dark">
+                    <h5 class="mb-1 text-body-secondary">@report.DateTime</h5>
+                    <h2 class="mb-0">@report.Caption</h2>
+                </a>
+        </div>
+    }
+</div>
 </div>

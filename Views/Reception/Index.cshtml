@@ -43,9 +43,9 @@
                                                 class="btn btn-sm btn-outline-secondary">Edit</a>
                                                 <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
                                             }
-                                        else if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                                         {
-                                            <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                            <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
                                                class="btn btn-sm btn-outline-secondary">Write report</a>
                                         }
                                         </div>
@@ -67,9 +67,9 @@
                                                    class="btn btn-sm btn-outline-secondary">Edit</a>
                                             <button type="button" class="btn btn-sm btn-outline-secondary">Cancel</button>
                                         }
-                                        else if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                                         {
-                                            <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
+                                            <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
                                                class="btn btn-sm btn-outline-secondary">Write report</a>
                                         }
                                     </div>
