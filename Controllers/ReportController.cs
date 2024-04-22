@@ -34,7 +34,7 @@ namespace Clinic.Controllers
         {
             if (ModelState.IsValid)
             {
-                var reception = await _receptionRepository.GetByIdAsync(id);
+                var reception = await _receptionRepository.GetByIdAsyncNoTracking(id);
                 if (reception == null) return View("Error");
 
                 var report = new Report()

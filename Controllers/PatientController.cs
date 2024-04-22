@@ -11,10 +11,12 @@ namespace Clinic.Controllers
     public class PatientController : Controller
     {
         private readonly IPatientRepository _patientRepository;
+        private readonly IReportRepository _reportRepository;
 
-        public PatientController(IPatientRepository patientRepository)
+        public PatientController(IPatientRepository patientRepository, IReportRepository reportRepository)
         {
             _patientRepository = patientRepository;
+            _reportRepository = reportRepository;
         }
         public async Task<IActionResult> Index()
         {
@@ -23,8 +25,21 @@ namespace Clinic.Controllers
         }
         public async Task<IActionResult> Detail(int id)
         {
-            Patient patient = await _patientRepository.GetByIdAsync(id); 
-            return View(patient);
+            Patient patient = await _patientRepository.GetByIdAsync(id);
+            var reports = await _reportRepository.GetReportsByPatientId(id);
+            var patientVM = new PatientViewModel()
+            {
+                Id = patient.Id,
+                Name = patient.Name,
+                Surname = patient.Surname,
+                BirthDate = patient.BirthDate,
+                Gender = patient.Gender,
+                AddressId = patient.AddressId,
+                Address = patient.Address,
+                PhoneNumber = patient.PhoneNumber,
+                Reports = reports
+            };
+            return View(patientVM);
         }
         public IActionResult Create()
         {
