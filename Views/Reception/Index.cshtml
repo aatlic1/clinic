@@ -11,6 +11,17 @@
     <link href="badges.css" rel="stylesheet">
 </head>
 
+<form id="filterForm" class="d-flex" role="search" asp-controller="Reception" asp-action="Index" method="GET">
+    <label for="startDatePicker">Start Date:</label>
+    <input class="form-control me-2" type="date" id="startDatePicker" name="startDate">
+
+    <label for="endDatePicker">End Date:</label>
+    <input class="form-control me-2" type="date" id="endDatePicker" name="endDate">
+
+    <button class="btn btn-outline-success" type="submit">Filter</button>
+    <button class="btn btn-outline-secondary" type="button" id="clearFilter">Clear</button>
+</form>
+
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -29,76 +40,9 @@
 </div>
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-            <div class="table-responsive small">
-                <table class="table table-striped table-sm">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Patient's name</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Doctor's name</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            @if (@item.Emergency == true)
-                            {
-                                <tr style="border: 2px solid red;">
-                                <td>
-                                    <span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Danger</span>
-                                    </td>
-                                    <td>@item.Patient.Name @item.Patient.Surname</td>
-                                    <td>@item.DateTime</td>
-                                    <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
-                                            {
-                                                <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
-                                                class="btn btn-sm btn-outline-secondary">Edit</a>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-reception-id="@item.Id">Cancel</button>
-
-                                            }
-                                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
-                                        {
-                                            <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
-                                               class="btn btn-sm btn-outline-secondary">Write report</a>
-                                        }
-                                        </div>
-                                    </td>
-                            </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td></td>
-                                    <td>@item.Patient.Name @item.Patient.Surname</td>
-                                    <td>@item.DateTime</td>
-                                    <td>@item.Doctor.Name @item.Doctor.Surname - @item.Doctor.Code</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
-                                            {
-                                                <a type="btn btn-success" asp-controller="Reception" asp-action="Edit" asp-route-id="@item.Id"
-                                                   class="btn btn-sm btn-outline-secondary">Edit</a>
-                                            <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-reception-id="@item.Id">Cancel</button>
-                                        }
-                                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
-                                        {
-                                            <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
-                                               class="btn btn-sm btn-outline-secondary">Write report</a>
-                                        }
-                                    </div>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-
-            </div>
+        <div class="table-responsive small">
+            @await Html.PartialAsync("_ReceptionsTable", Model)
+        </div>
         <div class="position-fixed bottom-0 end-0 mb-3 me-3">
             @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("nurse"))
             {
@@ -131,6 +75,53 @@
                         location.reload();
                     },
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#filterForm').submit(function (event) {
+                event.preventDefault(); 
+
+                var startDate = $('#startDatePicker').val();
+                var endDate = $('#endDatePicker').val();
+
+                $.ajax({
+                    url: '/Reception/Filter',
+                    type: 'GET',
+                    data: {
+                        startDate: startDate,
+                        endDate: endDate
+                    },
+                    success: function (data) {
+                        $('#receptionsTable').html(data);
+                    },
+                    error: function () {
+                        alert('An error occurred while processing your request.');
+                    }
+                });
+            });
+        });
+        $('#clearFilter').click(function () {
+            $('#startDatePicker').val(''); 
+            $('#endDatePicker').val('');  
+
+            var startDate = ''; 
+            var endDate = '';   
+
+            $.ajax({
+                url: '/Reception/Filter',
+                type: 'GET',
+                data: {
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                success: function (data) {
+                    $('#receptionsTable').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
             });
         });
     </script>
