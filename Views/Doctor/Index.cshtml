@@ -59,7 +59,7 @@
                                 </div>
                                 @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
                                 {
-                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-patient-id="@item.Id">Delete</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary btn-delete" data-doctor-id="@item.Id">Delete</button>
                                 }
                             </div>
                         </div>
@@ -79,19 +79,19 @@
 
 @section Scripts {
     <script>
-        var deletePatientId;
+        var deleteDoctorId;
 
         $(document).ready(function () {
             $('.btn-delete').click(function () {
-                deletePatientId = $(this).data('patient-id');
+                deleteDoctorId = $(this).data('doctor-id');
                 $('#deleteConfirmationModal').modal('show');
             });
 
             $('#confirmDeleteButton').click(function () {
                 $.ajax({
-                    url: '/Patient/Delete',
+                    url: '/Doctor/Delete',
                     type: 'POST',
-                    data: { id: deletePatientId },
+                    data: { id: deleteDoctorId },
                     success: function (data) {
                         location.reload();
                     },
