@@ -13,8 +13,8 @@ namespace Clinic.Models
         [ForeignKey("Doctor")]
         public string DoctorId { get; set; }
         public Doctor Doctor { get; set; }
-        public string Description { get; set; }
-        public string Caption { get; set; }
+        public string? Description { get; set; }
+        public string? Caption { get; set; }
         public DateTime DateTime { get; set; }
     }
 }
