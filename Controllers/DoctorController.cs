@@ -136,5 +136,15 @@ namespace Clinic.Controllers
             _doctorRepository.Delete(doctor);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> Search(string searchDoctor)
+        {
+            if (string.IsNullOrEmpty(searchDoctor))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var doctors = await _doctorRepository.GetDoctorByNameOrCode(searchDoctor);
+            return View("Index", doctors);
+        }
     }
 }

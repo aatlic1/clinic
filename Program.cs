@@ -60,6 +60,9 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "searchPatient",
         pattern: "{controller=Patient}/{action=Search}/{searchPatient?}");
+    endpoints.MapControllerRoute(
+        name: "searchDoctor",
+        pattern: "{controller=Doctor}/{action=Search}/{searchDoctor?}");
 });
 
 app.Run();
