@@ -4,7 +4,7 @@ namespace Clinic.Controllers
 {
     public class ReportController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Create()
         {
             return View();
         }
