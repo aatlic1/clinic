@@ -30,7 +30,7 @@
     @foreach (var report in Model.Reports) 
     {
         <div class="col p-4 d-flex flex-column position-static">
-                <a href="@Url.Action("Details", "Report", new { id = report.Id })" class="col p-4 d-flex flex-column position-static text-decoration-none text-dark">
+                <a asp-controller="Report" asp-action="Detail" asp-route-id="@report.Id" class="col p-4 d-flex flex-column position-static text-decoration-none text-dark">
                     <h5 class="mb-1 text-body-secondary">@report.DateTime</h5>
                     <h2 class="mb-0">@report.Caption</h2>
                 </a>

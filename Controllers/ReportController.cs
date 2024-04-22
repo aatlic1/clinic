@@ -1,5 +1,6 @@
 ﻿using Clinic.Interfaces;
 using Clinic.Models;
+using Clinic.Repository;
 using Clinic.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,6 +55,12 @@ namespace Clinic.Controllers
             }
 
             return View(reportVM);
+        }
+
+        public async Task<IActionResult> Detail(int id)
+        {
+            var report = await _reportRepository.GetReportById(id);
+            return View(report);
         }
     }
 }
