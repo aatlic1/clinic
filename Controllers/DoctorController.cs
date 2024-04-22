@@ -127,5 +127,14 @@ namespace Clinic.Controllers
             }
             return View(doctorVM);
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var doctor = await _doctorRepository.GetByIdAsyncNoTracking(id);
+            if (doctor == null) return View("Error");
+
+            _doctorRepository.Delete(doctor);
+            return RedirectToAction("Index");
+        }
     }
 }
