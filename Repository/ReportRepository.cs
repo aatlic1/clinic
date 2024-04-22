@@ -30,5 +30,11 @@ namespace Clinic.Repository
         {
             return await _context.Reports.Where(r => r.PatientId == id).ToListAsync();
         }
+
+        public async Task<Report> GetReportById(int id)
+        {
+            return await _context.Reports.Include(p => p.Patient).Include(d => d.Doctor)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
     }
 }
