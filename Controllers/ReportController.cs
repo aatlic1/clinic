@@ -40,8 +40,7 @@ namespace Clinic.Controllers
 
                 var report = new Report()
                 {
-                    PatientId = reception.PatientId, // Handle nullable PatientId
-                    Patient = reportVM.Patient,
+                    PatientId = reception.PatientId,
                     DoctorId = reception.DoctorId,
                     Doctor = reportVM.Doctor,
                     DateTime = reportVM.DateTime,

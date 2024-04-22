@@ -15,7 +15,8 @@ namespace Clinic.Controllers
         private readonly IDoctorRepository _doctorRepository;
         private readonly IPatientRepository _patientRepository;
 
-        public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, IDoctorRepository doctorRepository)
+        public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, 
+            IDoctorRepository doctorRepository)
         {
             _receptionRepository = receptionRepository;
             _doctorRepository = doctorRepository;
@@ -127,6 +128,15 @@ namespace Clinic.Controllers
 
             _receptionRepository.Update(reception);
 
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var reception = await _receptionRepository.GetByIdAsyncNoTracking(id);
+            if (reception == null) return View("Error");
+
+            _receptionRepository.Delete(reception);
             return RedirectToAction("Index");
         }
     }
