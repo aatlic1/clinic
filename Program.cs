@@ -50,8 +50,16 @@ using Microsoft.EntityFrameworkCore;
 app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.Run();
+    // Ruta za pretraživanje pacijenata
+    endpoints.MapControllerRoute(
+        name: "searchPatient",
+        pattern: "{controller=Patient}/{action=Search}/{searchPatient?}");
+});
+
+app.Run();
