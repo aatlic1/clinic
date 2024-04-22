@@ -125,7 +125,7 @@ namespace Clinic.Controllers
                     if (newUserResponse.Succeeded)
                         if (newUser.Title == Data.Enum.Title.Nurse)
                             await _userManager.AddToRoleAsync(newUser, UserRole.Nurse);
-                        else await _userManager.AddToRoleAsync(newUser, UserRole.Nurse);
+                        else await _userManager.AddToRoleAsync(newUser, UserRole.Doctor);
 
                     return RedirectToAction("Index", "Patient");
                     
