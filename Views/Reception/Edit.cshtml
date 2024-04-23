@@ -1,58 +1,104 @@
 ﻿@using Clinic.ViewModels
 @model EditReceptionViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "Edit Reception";
 }
 
 <head>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+    <style>
+        .custom-form {
+            background-color: #FFFFFF;
+            color: #0C7691;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+            .custom-form .form-group {
+                margin-bottom: 20px;
+            }
+
+            .custom-form input[type="submit"] {
+                background-color: #0C7691;
+                color: #FFFFFF;
+                border-color: #0C7691;
+            }
+
+            .custom-form .btn-cancel {
+                color: #0C7691;
+                border-color: #0C7691;
+            }
+
+                .custom-form .btn-cancel:hover {
+                    background-color: #776B5D;
+                    border-color: #776B5D;
+                    color: #FFFFFF;
+                }
+
+            .custom-form .btn-cancel {
+                margin-left: 5%;
+            }
+    </style>
+
 </head>
-<form method="post" asp-action="Edit">
-    <div class="form-row form-group">
-        <div class="col">
-            <select asp-for="PatientId" class="form-control">
-                <option>--Select--</option>
-                @if (ViewBag.PatientList != null)
-                {
-                    foreach (SelectListItem item in ViewBag.PatientList)
-                    {
-                        <option value="@item.Value">@Html.Raw(item.Text)</option>
-                    }
-                }
-            </select>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="custom-form">
+            <h4>Edit Reception</h4>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <span><b>Sorry!</b> - @TempData["Error"]</span>
+                </div>
+            }
+            <form method="post" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-row form-group">
+                    <label asp-for="PatientId" class="control-label">Patient's Name</label>
+                    <select asp-for="PatientId" class="form-control">
+                        <option>--Select--</option>
+                        @if (ViewBag.PatientList != null)
+                        {
+                            foreach (SelectListItem item in ViewBag.PatientList)
+                            {
+                                <option value="@item.Value">@Html.Raw(item.Text)</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="PatientId" class="text-danger"></span>
+
+                </div>
+                <div class="form-row form-group">
+                    <label asp-for="DoctorId" class="control-label">Doctors's Name</label>
+                    <select asp-for="DoctorId" class="form-control">
+                        <option>--Select--</option>
+                        @if (ViewBag.DoctorList != null)
+                        {
+                            foreach (SelectListItem item in ViewBag.DoctorList)
+                            {
+                                <option value="@item.Value">@Html.Raw(item.Text)</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="DoctorId" class="text-danger"></span>
+                </div>
+                <div class="form-row form-group">
+                    <label asp-for="DateTime" class="control-label">Date and Time</label>
+                    <input asp-for="DateTime" class="form-control form-control-lg" type="datetime-local" placeholder="Date" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="DateTime" class="text-danger"></span>
+                </div>
+                <div class="form-row form-group">
+                    <input asp-for="Emergency" type="checkbox" data-toggle="switchbutton" data-onstyle="danger" data-onlabel="Urgent" data-offlabel="Not Urgent">
+                </div>
+                <div class="form-row form-group">
+                    <input class="btn btn-outline-light" type="submit" value="Edit Reception" />
+                    <a asp-controller="Reception" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Close</a>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <select asp-for="DoctorId" class="form-control">
-                <option>--Select--</option>
-                @if (ViewBag.DoctorList != null)
-                {
-                    foreach (SelectListItem item in ViewBag.DoctorList)
-                    {
-                        <option value="@item.Value">@Html.Raw(item.Text)</option>
-                    }
-                }
-            </select>
-        </div>
-    </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="DateTime" class="form-control form-control-lg" type="datetime-local" placeholder="Date" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
-            <span asp-validation-for="DateTime" class="text-danger"></span>
-        </div>
-    </div> 
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="Emergency" type="checkbox" data-toggle="switchbutton" data-onstyle="danger" data-onlabel="Emergency" data-offlabel="Not Emergency">
-        </div>
-    </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <button class="btn btn-block btn-success btn-lg" type="submit">Create Account</button>
-        </div>
-    </div>
-</form>
+</div>
+

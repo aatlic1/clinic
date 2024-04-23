@@ -1,10 +1,24 @@
 ﻿@model IEnumerable<Reception>
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+    <style>
+    .rounded-badge {
+        border-radius: 1rem; 
+        background-color: #B80000;
+        color: white; 
+        padding: 0.25rem 0.5rem; 
+    }
+
+    .primary-button {
+        color: #0C7691;
+        border-color: #0C7691;
+    }
+
+    .primary-button:hover {
+            background-color: #0C6082;
+            color: #FFFFFF;
+        }
+    </style>
+
 <table id="receptionsTable" class="table table-striped table-sm">
     <thead>
         <tr>
@@ -21,9 +35,9 @@
         {
             @if (@item.Emergency == true)
             {
-                <tr style="border: 2px solid red;">
+                <tr style="border: 2px solid #B80000;">
                     <td>
-                        <span class="badge bg-danger-subtle border border-danger-subtle text-danger-emphasis rounded-pill">Danger</span>
+                        <span class="rounded-badge">Urgent</span>
                     </td>
                     <td>@item.Patient.Name @item.Patient.Surname</td>
                     <td>@item.DateTime</td>
@@ -40,13 +54,13 @@
                             @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                             {
                                 <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
-                                   class="btn btn-sm btn-outline-secondary">Write report</a>
+                                   class="btn btn-sm btn-outline-secondary primary-button">Write report</a>
                             }
                         </div>
                     </td>
                     <td>
                         <a type="btn btn-success" asp-controller="Reception" asp-action="GeneratePDF" asp-route-id="@item.Id"
-                           class="btn btn-sm btn-outline-secondary">PDF</a>
+                           class="btn btn-sm btn-outline-secondary primary-button">PDF</a>
                     </td>
                 </tr>
             }
@@ -68,13 +82,13 @@
                             @if (User.Identity.IsAuthenticated && User.IsInRole("admin") || User.IsInRole("doctor"))
                             {
                                 <a type="btn btn-success" asp-controller="Report" asp-action="Create" asp-route-id="@item.Id"
-                                   class="btn btn-sm btn-outline-secondary">Write report</a>
+                                   class="btn btn-sm btn-outline-secondary primary-button">Write report</a>
                             }
                         </div>
                     </td>
                     <td>
                         <a type="btn btn-success" asp-controller="Reception" asp-action="GeneratePDF" asp-route-id="@item.Id"
-                           class="btn btn-sm btn-outline-secondary">PDF</a>
+                           class="btn btn-sm btn-outline-secondary primary-button">PDF</a>
                     </td>
                 </tr>
             }
