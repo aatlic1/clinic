@@ -14,6 +14,6 @@ namespace Clinic.Data
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Reception> Receptions { get; set; }
-        public DbSet<Report> Reports { get; set; }     
+        public DbSet<Report> Reports { get; set; } 
     }
 }

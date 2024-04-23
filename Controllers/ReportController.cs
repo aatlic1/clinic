@@ -2,6 +2,8 @@
 using Clinic.Models;
 using Clinic.Repository;
 using Clinic.ViewModels;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Clinic.Controllers
@@ -60,6 +62,31 @@ namespace Clinic.Controllers
         {
             var report = await _reportRepository.GetReportById(id);
             return View(report);
+        }
+
+        public async Task<IActionResult> GeneratePDF(int id)
+        {
+            var result = await _reportRepository.GetReportById(id);
+
+            var memoryStream = new MemoryStream();
+            var document = new iTextSharp.text.Document();
+            PdfWriter.GetInstance(document, memoryStream);
+            document.Open();
+
+            document.Add(new Paragraph(result.Caption));
+            document.Add(new Paragraph());
+            document.Add(new Paragraph("Patient's Name: " + result.Patient.Name + " " + result.Patient.Surname));
+            document.Add(new Paragraph("Date of birth: " + result.Patient.BirthDate));
+            document.Add(new Paragraph("Gender: " + result.Patient.Gender));
+            document.Add(new Paragraph());
+            document.Add(new Paragraph("Doctor's Name: " + result.Doctor.Name + " " + result.Doctor.Surname));
+            document.Add(new Paragraph("Date: " + result.DateTime));
+            document.Add(new Paragraph());
+            document.Add(new Paragraph(result.Description));
+
+            document.Close();
+
+            return File(memoryStream.ToArray(), "application/pdf", "MedicalReport.pdf");
         }
     }
 }
