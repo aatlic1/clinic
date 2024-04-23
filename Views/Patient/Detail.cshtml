@@ -34,6 +34,8 @@
                     <h5 class="mb-1 text-body-secondary">@report.DateTime</h5>
                     <h2 class="mb-0">@report.Caption</h2>
                 </a>
+                <a type="btn btn-success" asp-controller="Report" asp-action="GeneratePDF" asp-route-id="@report.Id"
+                   class="btn btn-sm btn-outline-secondary">PDF</a>
         </div>
     }
 </div>
