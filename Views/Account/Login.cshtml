@@ -2,39 +2,58 @@
 @model LoginViewModel
 
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Signin";
 }
-<div class="row">
-    <div class="col-md-6 offset-3">
-        <p>
-            <h4>Log in to your account</h4>
-        </p>
-        @if(TempData["Error"] != null)
-        {
-            <div class="col-md-12 alert alert-danger">
-                <span><b>Sorry!</b> - @TempData["Error"]</span>
-            </div>
+
+<style>
+    .custom-form {
+        margin-top: 50px;
+        background-color: #FFFFFF; 
+        color: #0C7691;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+        .custom-form .form-group {
+            margin-bottom: 20px;
         }
-        <div class="row">
-            <div class="col-md-8 offset-2">
-                <form asp-action="Login">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="EmailAddress" class="control-label"></label>
-                        <input asp-for="EmailAddress" class="form-control">
-                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Password" class="control-label"></label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input class="btn btn-outline-success float right" type="submit" value="Log in" />
-                        <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Cancel</a>
-                    </div>
-                </form>
-            </div>
+
+        .custom-form input[type="submit"] {
+            background-color: #0C7691;
+            color: #FFFFFF; 
+            border-color: #0C7691; 
+        }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="custom-form">
+            <h4 class="text-center">Sign in to your account</h4>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <span><b>Sorry!</b> - @TempData["Error"]</span>
+                </div>
+            }
+            <form asp-action="Login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="EmailAddress" class="control-label"></label>
+                    <input asp-for="EmailAddress" class="form-control">
+                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group text-center">
+                    <input class="btn btn-outline-light" type="submit" value="Log in" />
+                </div>
+            </form>
+
+            <p class="text-center">Don't have an account?</p>
+            <h5 class="text-center"><a asp-area="" asp-controller="Account" asp-action="Code">Sign up</a></h5>
         </div>
     </div>
 </div>
