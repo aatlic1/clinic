@@ -67,7 +67,7 @@ var app = builder.Build();
             {
                 endpoints.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Reception}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "searchPatient",

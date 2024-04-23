@@ -1,49 +1,84 @@
 ﻿@using Clinic.Data.Enum
 @using Clinic.ViewModels
 @model CreateDoctorViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "Create Doctor";
 }
 
-@if (TempData["Error"] != null)
-{
-    <div class="col-md-12 alert alert-danger">
-        <span><b>Sorry!</b> - @TempData["Error"]</span>
-    </div>
-}
-<form method="post" asp-action="Create">
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="Name" class="form-control form-control-lg" placeholder="Name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="Surname" class="form-control form-control-lg" placeholder="Surname" />
-            <span asp-validation-for="Surname" class="text-danger"></span>
-        </div>
-    </div>
+<style>
+    .custom-form {
+        background-color: #FFFFFF;
+        color: #0C7691;
+        padding: 20px;
+        border-radius: 10px;
+    }
 
-    <div class="form-row form-group">
-        <div class="col">
-            <select asp-for="Title" asp-items="@Html.GetEnumSelectList<Title>()" class="form-control">
-                <option>--Select--</option>
-            </select>
-            <span asp-validation-for="Title" class="text-danger"></span>
+        .custom-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .custom-form input[type="submit"] {
+            background-color: #0C7691;
+            color: #FFFFFF;
+            border-color: #0C7691;
+        }
+
+            .custom-form .btn-cancel {
+                color: #0C7691;
+                border-color: #0C7691;
+            }
+
+            .custom-form .btn-cancel:hover{
+                background-color: #776B5D;
+            border-color: #776B5D;
+            color: #FFFFFF;
+            }
+
+        .custom-form .btn-cancel {
+            margin-left: 5%; 
+        }
+        
+</style>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="custom-form">
+            <h4>Create Doctor</h4>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <span><b>Sorry!</b> - @TempData["Error"]</span>
+                </div>
+            }
+            <form method="post" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Surname" class="control-label">Surname</label>
+                    <input asp-for="Surname" class="form-control" placeholder="Enter surname">
+                    <span asp-validation-for="Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label">Title</label>
+                    <select asp-for="Title" asp-items="@Html.GetEnumSelectList<Title>()" class="form-control">
+                        <option>--Select--</option>
+                    </select>
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Code" class="control-label">Code</label>
+                    <input asp-for="Code" class="form-control" placeholder="Enter code">
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input class="btn btn-outline-light" type="submit" value="Create Doctor" />
+                    <a asp-controller="Doctor" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Close</a>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="Code" class="form-control form-control-lg" placeholder="Code" />
-            <span asp-validation-for="Code" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <button class="btn btn-block btn-success btn-lg" type="submit">Create Account</button>
-        </div>
-    </div>
-</form>
+</div>

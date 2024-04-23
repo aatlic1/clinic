@@ -23,12 +23,15 @@
             color: #FFFFFF; 
             border-color: #0C7691; 
         }
+        .form-text text-muted {
+        color: #BEBEBE;
+    }
 </style>
 
 <div class="row justify-content-center">
     <div class="col-md-6">
         <div class="custom-form">
-            <h4 class="text-center">Sign in to your account</h4>
+            <h4 class="text-center">Sign in</h4>
             @if (TempData["Error"] != null)
             {
                 <div class="alert alert-danger">
@@ -52,7 +55,7 @@
                 </div>
             </form>
 
-            <p class="text-center">Don't have an account?</p>
+            <p class="text-center text-muted">Don't have an account?</p>
             <h5 class="text-center"><a asp-area="" asp-controller="Account" asp-action="Code">Sign up</a></h5>
         </div>
     </div>
