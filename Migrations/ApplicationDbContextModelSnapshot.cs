@@ -44,7 +44,7 @@ namespace Clinic.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Clinic.Models.Doctor", b =>
@@ -158,7 +158,7 @@ namespace Clinic.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("Clinic.Models.Reception", b =>
@@ -188,7 +188,7 @@ namespace Clinic.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Receptions");
+                    b.ToTable("Receptions", (string)null);
                 });
 
             modelBuilder.Entity("Clinic.Models.Report", b =>
@@ -221,7 +221,7 @@ namespace Clinic.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Reports", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

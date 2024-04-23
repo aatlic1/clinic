@@ -3,9 +3,13 @@ using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
 using Clinic.ViewModels;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Rotativa;
+using System.Reflection.Metadata;
 
 namespace Clinic.Controllers
 {
@@ -152,6 +156,28 @@ namespace Clinic.Controllers
                 var receptions = await _receptionRepository.GetReceptionsByDates(startDate.Value, endDate.Value);
                 return PartialView("_ReceptionsTable", receptions);
             }
+        }
+
+        public async Task<IActionResult> GeneratePDF(int id)
+        {
+            var result = await _receptionRepository.GetByIdAsync(id);
+
+            // Kreiranje PDF dokumenta
+            var memoryStream = new MemoryStream();
+            var document = new iTextSharp.text.Document();
+            PdfWriter.GetInstance(document, memoryStream);
+            document.Open();
+
+            // Dodavanje podataka iz tabele u PDF dokument
+            document.Add(new Paragraph("Appointment Details"));
+            document.Add(new Paragraph("Patient Name: " + result.Patient.Name));
+            document.Add(new Paragraph("Doctor Name: " + result.Doctor.Name));
+            document.Add(new Paragraph("Date: " + result.DateTime));
+
+            document.Close();
+
+            // Vraćanje PDF dokumenta kao rezultat akcije
+            return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
         }
     }
 }
