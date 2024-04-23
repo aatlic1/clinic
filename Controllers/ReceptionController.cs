@@ -162,13 +162,11 @@ namespace Clinic.Controllers
         {
             var result = await _receptionRepository.GetByIdAsync(id);
 
-            // Kreiranje PDF dokumenta
             var memoryStream = new MemoryStream();
             var document = new iTextSharp.text.Document();
             PdfWriter.GetInstance(document, memoryStream);
             document.Open();
 
-            // Dodavanje podataka iz tabele u PDF dokument
             document.Add(new Paragraph("Appointment Details"));
             document.Add(new Paragraph("Patient Name: " + result.Patient.Name));
             document.Add(new Paragraph("Doctor Name: " + result.Doctor.Name));
@@ -176,7 +174,6 @@ namespace Clinic.Controllers
 
             document.Close();
 
-            // Vraćanje PDF dokumenta kao rezultat akcije
             return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
         }
     }
