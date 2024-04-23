@@ -19,10 +19,9 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Patient" asp-action="Index">Patients</a>
                         </li>
                         <li class="nav-item">
@@ -31,19 +30,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Reception" asp-action="Index">Receptions</a>
                         </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
+                        
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-                            </li>
-                        }
-                        else
-                        {    
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Code">Register</a>
                             </li>
                         }
                     </ul>

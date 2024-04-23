@@ -1,8 +1,9 @@
-using Clinic.Data;
+ï»¿using Clinic.Data;
 using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,7 +28,19 @@ using Microsoft.EntityFrameworkCore;
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                    .AddCookie();
 
-            var app = builder.Build();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+});
+
+var app = builder.Build();
 
             if (args.Length == 1 && args[0].ToLower() == "seeddata")
             {
@@ -47,22 +60,24 @@ using Microsoft.EntityFrameworkCore;
             app.UseStaticFiles();
 
             app.UseRouting();
-app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
 
-    // Ruta za pretraživanje pacijenata
-    endpoints.MapControllerRoute(
-        name: "searchPatient",
-        pattern: "{controller=Patient}/{action=Search}/{searchPatient?}");
-    endpoints.MapControllerRoute(
-        name: "searchDoctor",
-        pattern: "{controller=Doctor}/{action=Search}/{searchDoctor?}");
-});
+                endpoints.MapControllerRoute(
+                    name: "searchPatient",
+                    pattern: "{controller=Patient}/{action=Search}/{searchPatient?}");
+                endpoints.MapControllerRoute(
+                    name: "searchDoctor",
+                    pattern: "{controller=Doctor}/{action=Search}/{searchDoctor?}");
+            });
+
+
+
 
 app.Run();
