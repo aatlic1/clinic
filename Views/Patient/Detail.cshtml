@@ -1,42 +1,65 @@
 ﻿@using Clinic.ViewModels
 @model PatientViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
+    ViewData["Title"] = "Patient";
 }
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+
+        .btn-pdf {
+            background-color: #FFFFFF; 
+            color: #0C7691; 
+            border-color: #0C7691; 
+        }
+
+            .btn-pdf:hover {
+                background-color: #7FA087; 
+                border-color: #7FA087;
+                color: #FFFFFF; 
+            }
+
+        .list-group {
+            margin-top: 20px; 
+        }
+    </style>
 </head>
-<div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-    <div class="col-auto d-none d-lg-block">
-        <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXwVMBH75TaekX3rtcgkfKaoMOUHvTc2C17g&usqp=CAU"
-             alt="Card image cap">
-    </div>
-    <div class="col p-4 d-flex flex-column position-static">
-        <h2 class="mb-0">@Model.Name @Model.Surname</h2>
-        <h5 class="mb-1 text-body-secondary">@Model.BirthDate</h5>
-        <p class="card-text mb-auto">@Model.Gender</p>
-        @if (Model.Address != null)
-        {
-            <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-geo-alt"></i> @($"{Model.Address.Street}, {Model.Address.City}, {Model.Address.State}")</strong>
-        }
-        @if (Model.PhoneNumber != null)
-        {
-            <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong>
-        }
-    </div>
-    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-    @foreach (var report in Model.Reports) 
-    {
-        <div class="col p-4 d-flex flex-column position-static">
-                <a asp-controller="Report" asp-action="Detail" asp-route-id="@report.Id" class="col p-4 d-flex flex-column position-static text-decoration-none text-dark">
-                    <h5 class="mb-1 text-body-secondary">@report.DateTime</h5>
-                    <h2 class="mb-0">@report.Caption</h2>
-                </a>
-                <a type="btn btn-success" asp-controller="Report" asp-action="GeneratePDF" asp-route-id="@report.Id"
-                   class="btn btn-sm btn-outline-secondary">PDF</a>
+
+<div class="card mb-4 shadow-sm medical-report">
+    <div class="row g-0">
+        <div class="col-auto">
+            <img class="bd-placeholder-img card-img-top" width="100%" height="225" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXwVMBH75TaekX3rtcgkfKaoMOUHvTc2C17g&usqp=CAU"
+                 alt="Card image cap">
         </div>
-    }
-</div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h2 class="card-title">@Model.Name @Model.Surname</h2>
+                <p class="card-subtitle mb-2">Birth Date: @Model.BirthDate</p>
+                <p class="card-text">Gender: @Model.Gender</p>
+                @if (Model.Address != null)
+                {
+                    <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-geo-alt"></i> @($"{Model.Address.Street}, {Model.Address.City}, {Model.Address.State}")</strong>
+                }
+                @if (Model.PhoneNumber != null)
+                {
+                    <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong>
+                }
+            </div>
+        </div>
+        <div class="list-group">
+            <h4 style="margin-left:10px;">Medical reports:</h4>
+            @foreach (var report in Model.Reports)
+            {
+                <div class="col p-4 d-flex flex-column position-static">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <a asp-controller="Report" asp-action="Detail" asp-route-id="@report.Id" class="text-decoration-none text-dark">
+                            <h5 class="mb-0">@report.Caption</h5>
+                        </a>
+                        <a class="btn btn-pdf" asp-controller="Report" asp-action="GeneratePDF" asp-route-id="@report.Id">PDF</a>
+                    </div>
+                    <p class="mb-1 text-body-secondary text-muted">@report.DateTime</p>
+                </div>
+            }
+        </div>
+    </div>
 </div>
