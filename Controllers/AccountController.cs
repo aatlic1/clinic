@@ -2,6 +2,7 @@
 using Clinic.Interfaces;
 using Clinic.Models;
 using Clinic.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +21,13 @@ namespace Clinic.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
-        [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             var response = new LoginViewModel();
             return View(response);
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginVM)
         {
@@ -55,13 +55,13 @@ namespace Clinic.Controllers
             }
             return View(loginVM);
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> Code()
         {
             var response = new CodeViewModel();
             return View(response);
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Code(CodeViewModel codeVM)
         {
@@ -82,7 +82,7 @@ namespace Clinic.Controllers
 
             return RedirectToAction("Register", "Account");
         }
-
+        [AllowAnonymous]
         public IActionResult Register()
         {
             var response = new RegisterViewModel();
@@ -90,11 +90,14 @@ namespace Clinic.Controllers
 
             return View(response);
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel registerVM)
         {
-            if (!ModelState.IsValid) return View(registerVM);
+            if (!ModelState.IsValid)
+            {
+                return View(registerVM);
+            }
 
 
             var doctorId = TempData["DoctorId"].ToString();
@@ -108,6 +111,8 @@ namespace Clinic.Controllers
                     if (user != null)
                     {
                         TempData["Error"] = "This email address is already in use";
+                        _doctorRepository.Add(doctor);
+                        TempData["DoctorId"] = doctor.Id;
                         return View(registerVM);
                     }
 
@@ -123,12 +128,17 @@ namespace Clinic.Controllers
                     var newUserResponse = await _userManager.CreateAsync(newUser, registerVM.Password);
 
                     if (newUserResponse.Succeeded)
+                    {
                         if (newUser.Title == Data.Enum.Title.Nurse)
                             await _userManager.AddToRoleAsync(newUser, UserRole.Nurse);
                         else await _userManager.AddToRoleAsync(newUser, UserRole.Doctor);
+                        return RedirectToAction("Index", "Reception");
+                    }
 
-                    return RedirectToAction("Index", "Patient");
-                    
+                    TempData["Error"] = "Password must contain characters, numbers, and both uppercase and lowercase letters.";
+                    _doctorRepository.Add(doctor);
+                    TempData["DoctorId"] = doctor.Id;
+
                 }
             }
             return View(registerVM);

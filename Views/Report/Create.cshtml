@@ -1,57 +1,117 @@
 ﻿@using Clinic.ViewModels
 @model CreateReportViewModel
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+
 @{
+    ViewData["Title"] = "Create medical report";
 }
 
-<form method = "post" asp-action="Create">
-    <div class="form-row form-group">
-        <div class="col">
-            <input asp-for="Caption" class="form-control form-control-lg" placeholder="Caption" />
-            <span asp-validation-for="Caption" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-            <h2 class="mb-0">@Model.Patient.Name @Model.Patient.Surname</h2>
-            <input type="hidden" asp-for="Patient.Name"/>
-            <input type="hidden" asp-for="Patient.Surname" />
-            <h5 class="mb-1 text-body-secondary">@Model.Patient.BirthDate</h5>
-            <input type="hidden" asp-for="Patient.BirthDate" />
-            <p class="card-text mb-auto">@Model.Patient.Gender</p>
-            <input type="hidden" asp-for="Patient.Gender" />
-            @if (Model.Patient.Address != null)
-            {
-                <strong class="d-inline-block mb-2 text-primary-emphasis"> 
-                    @($"{Model.Patient.Address.Street}, {Model.Patient.Address.City}, {Model.Patient.Address.State}")
-                    <input type="hidden" asp-for="Patient.Address.City" />
-                    <input type="hidden" asp-for="Patient.Address.City" />
-                    <input type="hidden" asp-for="Patient.Address.State" />
-                </strong>
-            }
-        </div>
-        <div class="col p-4 d-flex flex-column position-static">
-            <h2 class="mb-0">
-                @Model.Doctor.Name @Model.Doctor.Surname
-                <input type="hidden" asp-for="Doctor.Surname" />
-                <input type="hidden" asp-for="Doctor.Name" />
+<style>
+    .custom-form {
+        background-color: #FFFFFF;
+        color: #0C7691;
+        padding: 20px;
+        border-radius: 10px;
+    }
 
-            </h2>
-            <input type="hidden" asp-for="DateTime" />
-            <h5 class="mb-1 text-body-secondary">@Model.DateTime</h5>
+        .custom-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .custom-form input[type="submit"] {
+            background-color: #0C7691;
+            color: #FFFFFF;
+            border-color: #0C7691;
+        }
+
+        .custom-form .btn-cancel {
+            color: #0C7691;
+            border-color: #0C7691;
+            margin-left: 5%;
+        }
+
+            .custom-form .btn-cancel:hover {
+                background-color: #776B5D;
+                border-color: #776B5D;
+                color: #FFFFFF;
+            }
+
+    .patient-info,
+    .doctor-info {
+        color: #776B5D; 
+    }
+
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="custom-form">
+
+            <h4>Create medical report</h4>
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <span><b>Sorry!</b> - @TempData["Error"]</span>
+                </div>
+            }
+            <form method="post" asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row form-group">
+                    <div class="col">
+                        <input asp-for="Caption" class="form-control form-control-lg" placeholder="Caption" />
+                        <span asp-validation-for="Caption" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <div class="d-flex h-100">
+                            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative w-100">
+                                <div class="col p-4 d-flex flex-column position-static patient-info">
+                                    <h5 class="mb-0">Patient's Name: @Model.Patient.Name @Model.Patient.Surname</h5>
+                                    <input type="hidden" asp-for="Patient.Name" />
+                                    <input type="hidden" asp-for="Patient.Surname" />
+                                    <p class="mb-1 text-body-secondary">Birth Date: @Model.Patient.BirthDate</p>
+                                    <input type="hidden" asp-for="Patient.BirthDate" />
+                                    <p class="card-text mb-auto">Gender: @Model.Patient.Gender</p>
+                                    <input type="hidden" asp-for="Patient.Gender" />
+                                    @if (Model.Patient.Address != null)
+                                    {
+                                        <strong class="d-inline-block mb-2 text-primary-emphasis">
+                                            @($"{Model.Patient.Address.Street}, {Model.Patient.Address.City}, {Model.Patient.Address.State}")
+                                            <input type="hidden" asp-for="Patient.Address.City" />
+                                            <input type="hidden" asp-for="Patient.Address.City" />
+                                            <input type="hidden" asp-for="Patient.Address.State" />
+                                        </strong>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex h-100">
+                            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative w-100">
+                                <div class="col p-4 d-flex flex-column position-static doctor-info">
+                                    <h5 class="mb-0">
+                                        Doctor's Name: @Model.Doctor.Name @Model.Doctor.Surname
+                                        <input type="hidden" asp-for="Doctor.Surname" />
+                                        <input type="hidden" asp-for="Doctor.Name" />
+
+                                    </h5>
+                                    <input type="hidden" asp-for="DateTime" />
+                                    <br>
+                                    <p class="mb-1 text-body-secondary">Date: @Model.DateTime</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <textarea asp-for="Description" class="form-control form-control-lg" placeholder="Description"></textarea>
+                </div>
+                <div class="form-row form-group">
+                    <input class="btn btn-outline-light" type="submit" value="Save" />
+                    <a class="btn btn-outline-secondary  btn-cancel" asp-controller="Reception" asp-action="Index">Cancel</a>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <textarea asp-for="Description" class="form-control form-control-lg" placeholder="Description"></textarea>
-        </div>
-    </div>
-    <div class="form-row form-group">
-        <div class="col">
-            <button class="btn btn-block btn-success btn-lg" type="submit">Save</button>
-            <a class="btn btn-outline-secondary" asp-controller="Reception" asp-action="Index">Cancel</a>
-        </div>
-    </div>
-</form>
+</div>

@@ -17,13 +17,15 @@ namespace Clinic.Controllers
     {
         private readonly IReceptionRepository _receptionRepository;
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IReportRepository _reportRepository;
         private readonly IPatientRepository _patientRepository;
 
         public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, 
-            IDoctorRepository doctorRepository)
+            IDoctorRepository doctorRepository, IReportRepository reportRepository)
         {
             _receptionRepository = receptionRepository;
             _doctorRepository = doctorRepository;
+            _reportRepository = reportRepository;
             _patientRepository = patientRepository;
         }
         public async Task<IActionResult> Index()
@@ -119,18 +121,15 @@ namespace Clinic.Controllers
                 return View("Error");
             }
 
-            var reception = new Reception
-            {
-                Id = receptionVM.Id,
-                PatientId = receptionVM.PatientId,
-                Patient = receptionVM.Patient,
-                DoctorId = receptionVM.DoctorId,
-                Doctor = receptionVM.Doctor,
-                DateTime = receptionVM.DateTime,
-                Emergency = receptionVM.Emergency
-            };
+            detail.Id = receptionVM.Id;
+            detail.PatientId = receptionVM.PatientId;
+            detail.Patient = receptionVM.Patient;
+            detail.DoctorId = receptionVM.DoctorId;
+            detail.Doctor = receptionVM.Doctor;
+            detail.DateTime = receptionVM.DateTime;
+            detail.Emergency = receptionVM.Emergency;
 
-            _receptionRepository.Update(reception);
+            _receptionRepository.Update(detail);
 
             return RedirectToAction("Index");
         }
@@ -161,20 +160,63 @@ namespace Clinic.Controllers
         public async Task<IActionResult> GeneratePDF(int id)
         {
             var result = await _receptionRepository.GetByIdAsync(id);
+            if (result != null)
+            {
+                var report = await _reportRepository.GetReportByReception(result);
 
-            var memoryStream = new MemoryStream();
-            var document = new iTextSharp.text.Document();
-            PdfWriter.GetInstance(document, memoryStream);
-            document.Open();
+                var memoryStream = new MemoryStream();
+                var document = new iTextSharp.text.Document();
+                PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+                Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+                if (report != null)
+                {
+                    Paragraph caption = new Paragraph(report.Caption, boldFont);
+                    caption.Alignment = Element.ALIGN_CENTER;
+                    document.Add(caption);
+                }
+                else
+                {
+                    Paragraph caption = new Paragraph("Details of the reception", boldFont);
+                    caption.Alignment = Element.ALIGN_CENTER;
+                    document.Add(caption);
+                }
 
-            document.Add(new Paragraph("Appointment Details"));
-            document.Add(new Paragraph("Patient Name: " + result.Patient.Name));
-            document.Add(new Paragraph("Doctor Name: " + result.Doctor.Name));
-            document.Add(new Paragraph("Date: " + result.DateTime));
+                document.Add(new Paragraph(" "));
 
-            document.Close();
+                PdfPTable patientTable = new PdfPTable(2);
+                patientTable.AddCell("Patient's Name:");
+                patientTable.AddCell(result.Patient.Name + " " + result.Patient.Surname);
+                patientTable.AddCell("Date of birth:");
+                patientTable.AddCell(result.Patient.BirthDate.ToString());
+                patientTable.AddCell("Gender:");
+                patientTable.AddCell(result.Patient.Gender.ToString());
+                document.Add(patientTable);
 
-            return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
+                document.Add(new Paragraph(" "));
+
+                PdfPTable doctorTable = new PdfPTable(2);
+                doctorTable.AddCell("Doctor's Name:");
+                doctorTable.AddCell(result.Doctor.Name + " " + result.Doctor.Surname);
+                doctorTable.AddCell("Date:");
+                doctorTable.AddCell(result.DateTime.ToString());
+                document.Add(doctorTable);
+
+                document.Add(new Paragraph(" "));
+
+                if(report != null)
+                { 
+                    document.Add(new Paragraph(report.Description));
+                    document.Close();
+
+                    return File(memoryStream.ToArray(), "application/pdf", "MedicalReport.pdf");
+                }
+
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
+            }
+            return View();
         }
     }
 }

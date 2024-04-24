@@ -102,24 +102,20 @@ namespace Clinic.Controllers
                 return View(patientVM);
             }
 
-            var detail = await _patientRepository.GetByIdAsyncNoTracking(id);
+            var patient = await _patientRepository.GetByIdAsync(id);
 
-            if (detail == null)
+            if (patient == null)
             {
                 return View("Error");
             }
 
-            var patient = new Patient
-            {
-                Id = patientVM.Id,
-                Name = patientVM.Name,
-                Surname = patientVM.Surname,
-                BirthDate = patientVM.BirthDate,
-                Gender = patientVM.Gender,
-                AddressId = patientVM.AddressId,
-                Address = patientVM.Address,
-                PhoneNumber = patientVM.PhoneNumber
-            };
+            patient.Name = patientVM.Name;
+            patient.Surname = patientVM.Surname;
+            patient.BirthDate = patientVM.BirthDate;
+            patient.Gender = patientVM.Gender;
+            patient.AddressId = patientVM.AddressId;
+            patient.Address = patientVM.Address;
+            patient.PhoneNumber = patientVM.PhoneNumber;
 
             _patientRepository.Update(patient);
 
