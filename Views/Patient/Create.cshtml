@@ -2,7 +2,7 @@
 @using Clinic.ViewModels
 @model CreatePatientViewModel
 @{
-    ViewData["Title"] = "Create Doctor";
+    ViewData["Title"] = "Create Patient";
 }
 
 <style>
@@ -43,14 +43,7 @@
     <div class="col-md-12">
         <div class="custom-form">
             <h4>Create Patient</h4>
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger">
-                    <span><b>Sorry!</b> - @TempData["Error"]</span>
-                </div>
-            }
             <form method="post" asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group row">
                     <div class="col">
@@ -96,8 +89,7 @@
                         <input asp-for="Address.State" class="form-control form-control-lg" placeholder="State" />
                         <span asp-validation-for="Address.State" class="text-danger"></span>
                     </div>
-                </div>
-
+                </div> 
                 <div class="form-group">
                     <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
                     <input asp-for="PhoneNumber" class="form-control form-control-lg" placeholder="Phone" />
@@ -106,7 +98,7 @@
 
                 <div class="form-group">
                     <input class="btn btn-outline-light" type="submit" value="Create Patient" />
-                    <a asp-controller="Patient" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Close</a>
+                    <a asp-controller="Patient" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Cancel</a>
                 </div>
             </form>
         </div>

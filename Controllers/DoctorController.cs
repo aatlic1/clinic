@@ -53,22 +53,25 @@ namespace Clinic.Controllers
                         Title = doctorVM.Title,
                         Code = doctorVM.Code,
                         Email = "someemail@gmail.com",
-                        UserName = "someemail@gmail.com"
+                        UserName = doctorVM.Name[0] + doctorVM.Surname + doctorVM.Name[0]
                     };
 
                     var newUserResponse = await _userManager.CreateAsync(doctor, "Jabuka12!");
 
                     if (newUserResponse.Succeeded)
+                    {
                         if (doctor.Title == Data.Enum.Title.Nurse)
-                        { 
-                            await _userManager.AddToRoleAsync(doctor, UserRole.Nurse); 
+                        {
+                            await _userManager.AddToRoleAsync(doctor, UserRole.Nurse);
                         }
                         else
                         {
                             await _userManager.AddToRoleAsync(doctor, UserRole.Doctor);
                         }
+                        return RedirectToAction("Index");
+                    }
+                    return View(doctorVM);
 
-                    return RedirectToAction("Index");
                 }
 
                 TempData["Error"] = "Code is already existing. Please try again.";
@@ -104,25 +107,26 @@ namespace Clinic.Controllers
                     return View("Error");
                 }
 
-                var existing = await _doctorRepository.GetByCode(doctorVM.Code);
-
-                if (existing == null)
+                if (detail.Code != doctorVM.Code)
                 {
+                    var existing = await _doctorRepository.GetByCode(doctorVM.Code);
 
-                    var doctor = new Doctor
+                    if(existing != null)
                     {
-                        Id = doctorVM.Id,
-                        Name = doctorVM.Name,
-                        Surname = doctorVM.Surname,
-                        Title = doctorVM.Title,
-                        Code = doctorVM.Code,
-                    };
+                        TempData["Error"] = "Code is already existing. Please try again.";
+                        return View(doctorVM);
 
-                    _doctorRepository.Update(doctor);
-
-                    return RedirectToAction("Index");
+                    }
                 }
-                TempData["Error"] = "Code is already existing. Please try again.";
+                detail.Id = doctorVM.Id;
+                detail.Name = doctorVM.Name;
+                detail.Surname = doctorVM.Surname;
+                detail.Title = doctorVM.Title;
+                detail.Code = doctorVM.Code;
+
+                _doctorRepository.Update(detail);
+
+                return RedirectToAction("Index");
 
             }
             return View(doctorVM);
