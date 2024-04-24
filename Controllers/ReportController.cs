@@ -71,15 +71,33 @@ namespace Clinic.Controllers
             PdfWriter.GetInstance(document, memoryStream);
             document.Open();
 
-            document.Add(new Paragraph(result.Caption));
-            document.Add(new Paragraph());
-            document.Add(new Paragraph("Patient's Name: " + result.Patient.Name + " " + result.Patient.Surname));
-            document.Add(new Paragraph("Date of birth: " + result.Patient.BirthDate));
-            document.Add(new Paragraph("Gender: " + result.Patient.Gender));
-            document.Add(new Paragraph());
-            document.Add(new Paragraph("Doctor's Name: " + result.Doctor.Name + " " + result.Doctor.Surname));
-            document.Add(new Paragraph("Date: " + result.DateTime));
-            document.Add(new Paragraph());
+            Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+            Paragraph caption = new Paragraph(result.Caption, boldFont);
+            caption.Alignment = Element.ALIGN_CENTER;
+            document.Add(caption);
+
+            document.Add(new Paragraph(" "));
+
+            PdfPTable patientTable = new PdfPTable(2);
+            patientTable.AddCell("Patient's Name:");
+            patientTable.AddCell(result.Patient.Name + " " + result.Patient.Surname);
+            patientTable.AddCell("Date of birth:");
+            patientTable.AddCell(result.Patient.BirthDate.ToString());
+            patientTable.AddCell("Gender:");
+            patientTable.AddCell(result.Patient.Gender.ToString());
+            document.Add(patientTable);
+
+            document.Add(new Paragraph(" "));
+
+            PdfPTable doctorTable = new PdfPTable(2);
+            doctorTable.AddCell("Doctor's Name:");
+            doctorTable.AddCell(result.Doctor.Name + " " + result.Doctor.Surname);
+            doctorTable.AddCell("Date:");
+            doctorTable.AddCell(result.DateTime.ToString());
+            document.Add(doctorTable);
+
+            document.Add(new Paragraph(" "));
+
             document.Add(new Paragraph(result.Description));
 
             document.Close();

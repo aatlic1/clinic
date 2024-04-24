@@ -50,7 +50,7 @@
                     <span><b>Sorry!</b> - @TempData["Error"]</span>
                 </div>
             }
-            <form method="post" asp-action="Create">
+            <form method="post" asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group row">
@@ -107,7 +107,7 @@
 
                 <div class="form-group">
                     <input class="btn btn-outline-light" type="submit" value="Edit Patient" />
-                    <a asp-controller="Patient" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Close</a>
+                    <a asp-controller="Patient" asp-action="Index" class="btn btn-block btn-outline-secondary btn-cancel">Cancel</a>
                 </div>
             </form>
         </div>
