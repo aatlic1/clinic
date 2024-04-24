@@ -44,8 +44,7 @@ namespace Clinic.Controllers
                 {
                     PatientId = reception.PatientId,
                     DoctorId = reception.DoctorId,
-                    Doctor = reportVM.Doctor,
-                    DateTime = reportVM.DateTime,
+                    DateTime = reception.DateTime,
                     Caption = reportVM.Caption,
                     Description = reportVM.Description
                 };
@@ -67,7 +66,6 @@ namespace Clinic.Controllers
         public async Task<IActionResult> GeneratePDF(int id)
         {
             var result = await _reportRepository.GetReportById(id);
-
             var memoryStream = new MemoryStream();
             var document = new iTextSharp.text.Document();
             PdfWriter.GetInstance(document, memoryStream);
