@@ -36,5 +36,11 @@ namespace Clinic.Repository
             return await _context.Reports.Include(p => p.Patient).Include(d => d.Doctor)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
+
+        public async Task<Report> GetReportByReception(Reception reception)
+        {
+            return await _context.Reports.Include(p => p.Patient).Include(d => d.Doctor)
+                .FirstOrDefaultAsync(r => r.DateTime == reception.DateTime && reception.DoctorId == r.DoctorId && reception.PatientId == r.PatientId);
+        }
     }
 }

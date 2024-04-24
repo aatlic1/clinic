@@ -17,13 +17,15 @@ namespace Clinic.Controllers
     {
         private readonly IReceptionRepository _receptionRepository;
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IReportRepository _reportRepository;
         private readonly IPatientRepository _patientRepository;
 
         public ReceptionController(IReceptionRepository receptionRepository, IPatientRepository patientRepository, 
-            IDoctorRepository doctorRepository)
+            IDoctorRepository doctorRepository, IReportRepository reportRepository)
         {
             _receptionRepository = receptionRepository;
             _doctorRepository = doctorRepository;
+            _reportRepository = reportRepository;
             _patientRepository = patientRepository;
         }
         public async Task<IActionResult> Index()
@@ -161,20 +163,45 @@ namespace Clinic.Controllers
         public async Task<IActionResult> GeneratePDF(int id)
         {
             var result = await _receptionRepository.GetByIdAsync(id);
+            if (result != null)
+            {
+                var report = await _reportRepository.GetReportByReception(result);
 
-            var memoryStream = new MemoryStream();
-            var document = new iTextSharp.text.Document();
-            PdfWriter.GetInstance(document, memoryStream);
-            document.Open();
+                var memoryStream = new MemoryStream();
+                var document = new iTextSharp.text.Document();
+                PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+                if (report != null)
+                {
 
-            document.Add(new Paragraph("Appointment Details"));
-            document.Add(new Paragraph("Patient Name: " + result.Patient.Name));
-            document.Add(new Paragraph("Doctor Name: " + result.Doctor.Name));
-            document.Add(new Paragraph("Date: " + result.DateTime));
+                    document.Add(new Paragraph(report.Caption));
+                    document.Add(new Paragraph());
+                    document.Add(new Paragraph("Patient's Name: " + report.Patient.Name + " " + result.Patient.Surname));
+                    document.Add(new Paragraph("Date of birth: " + report.Patient.BirthDate));
+                    document.Add(new Paragraph("Gender: " + report.Patient.Gender));
+                    document.Add(new Paragraph());
+                    document.Add(new Paragraph("Doctor's Name: " + report.Doctor.Name + " " + result.Doctor.Surname));
+                    document.Add(new Paragraph("Date: " + report.DateTime));
+                    document.Add(new Paragraph());
+                    document.Add(new Paragraph(report.Description));
 
-            document.Close();
+                    document.Close();
 
-            return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
+                    return File(memoryStream.ToArray(), "application/pdf", "MedicalReport.pdf");
+
+                }
+                
+
+                document.Add(new Paragraph("Appointment Details"));
+                document.Add(new Paragraph("Patient Name: " + result.Patient.Name));
+                document.Add(new Paragraph("Doctor Name: " + result.Doctor.Name));
+                document.Add(new Paragraph("Date: " + result.DateTime));
+
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", "appointment.pdf");
+            }
+            return View();
         }
     }
 }
