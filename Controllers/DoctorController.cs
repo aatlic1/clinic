@@ -12,13 +12,10 @@ namespace Clinic.Controllers
     {
         private readonly IDoctorRepository _doctorRepository;
         private readonly UserManager<Doctor> _userManager;
-        private readonly SignInManager<Doctor> _signInManager;
 
-        public DoctorController(IDoctorRepository doctorRepository, UserManager<Doctor> userManager, 
-            SignInManager<Doctor> signInManager)
+        public DoctorController(IDoctorRepository doctorRepository, UserManager<Doctor> userManager)
         {
             _doctorRepository = doctorRepository;
-            _signInManager = signInManager;
             _userManager = userManager;
         }
 
