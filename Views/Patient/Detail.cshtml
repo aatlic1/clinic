@@ -38,11 +38,11 @@
                 <p class="card-text">Gender: @Model.Gender</p>
                 @if (Model.Address != null)
                 {
-                    <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-geo-alt"></i> @($"{Model.Address.Street}, {Model.Address.City}, {Model.Address.State}")</strong>
+                    <p><strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-geo-alt"></i> @($"{Model.Address.Street}, {Model.Address.City}, {Model.Address.State}")</strong></p>
                 }
                 @if (Model.PhoneNumber != null)
                 {
-                    <strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong>
+                    <p><strong class="d-inline-block mb-2 text-primary-emphasis"><i class="bi bi-telephone"></i> @Model.PhoneNumber</strong></p>
                 }
             </div>
         </div>
